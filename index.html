@@ -104,7 +104,7 @@
       transform: translateX(-50%) scale(0.95);
     }
 
-    /* Background Scenery: Barn & Fence */
+    /* Background Scenery: Trees, Barn & Fence */
     .scenery {
       position: absolute;
       top: 55%;
@@ -113,6 +113,62 @@
       height: 45%;
       pointer-events: none;
       z-index: 1;
+    }
+
+    /* Fluffy Trees in the Background */
+    .trees-background {
+      position: absolute;
+      top: -28px;
+      left: 0;
+      width: 100%;
+      height: 45px;
+      z-index: 0;
+      display: flex;
+      justify-content: space-around;
+      opacity: 0.85;
+    }
+
+    .fluffy-tree {
+      position: relative;
+      width: 90px;
+      height: 40px;
+    }
+
+    .fluffy-tree::before, .fluffy-tree::after, .tree-center {
+      content: '';
+      position: absolute.value;
+      background: #2e6f40;
+      border-radius: 50%;
+    }
+
+    .fluffy-tree .blob1 {
+      position: absolute;
+      width: 45px;
+      height: 35px;
+      background: #347d48;
+      border-radius: 50%;
+      bottom: 0;
+      left: 5px;
+    }
+
+    .fluffy-tree .blob2 {
+      position: absolute;
+      width: 55px;
+      height: 42px;
+      background: #3b8a51;
+      border-radius: 50%;
+      bottom: 4px;
+      left: 25px;
+    }
+
+    .fluffy-tree .blob3 {
+      position: absolute;
+      width: 40px;
+      height: 32px;
+      background: #2b6338;
+      border-radius: 50%;
+      bottom: 0;
+      right: 5px;
     }
 
     /* Barn Positioned on the Right, Foot Resting Right at the Fence Line */
@@ -295,6 +351,18 @@
 
   <!-- Background Scenery -->
   <div class="scenery">
+    <!-- Fluffy Background Trees -->
+    <div class="trees-background">
+      <div class="fluffy-tree"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+      <div class="fluffy-tree"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+      <div class="fluffy-tree"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+      <div class="fluffy-tree"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+      <div class="fluffy-tree"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+      <div class="fluffy-tree"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+      <div class="fluffy-tree"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+      <div class="fluffy-tree"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+    </div>
+
     <div class="barn-container">
       <svg viewBox="0 0 240 160" width="100%" height="100%">
         <!-- Right Extension Roof -->
