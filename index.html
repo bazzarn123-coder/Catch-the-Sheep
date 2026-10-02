@@ -57,6 +57,30 @@
       z-index: 20;
     }
 
+    /* Modal Text Content */
+    .modal-content {
+      position: absolute;
+      top: 32%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      text-align: center;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+      width: 90%;
+    }
+
+    .modal-content h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .modal-content p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffeb3b;
+    }
+
     /* Button positioned under the sheep feet area */
     .btn {
       position: absolute;
@@ -80,7 +104,7 @@
       transform: translateX(-50%) scale(0.95);
     }
 
-    /* Background Scenery: Detailed Barn & Fence */
+    /* Background Scenery: Barn & Fence */
     .scenery {
       position: absolute;
       top: 55%;
@@ -91,58 +115,24 @@
       z-index: 1;
     }
 
-    .barn {
+    /* Barn Positioned on the Right, Foot Resting Right at the Fence Line */
+    .barn-container {
       position: absolute;
-      left: 68%;
-      bottom: 58%;
-      width: 140px;
-      height: 95px;
-      background: #b22222;
-      border-radius: 2px;
+      right: 5%;
+      top: -110px;
+      width: 200px;
+      height: 135px;
       z-index: 1;
     }
 
-    .barn-roof {
-      position: absolute;
-      top: -45px;
-      left: -12px;
-      width: 164px;
-      height: 45px;
-      background: #8b0000;
-      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-    }
-
-    .barn-door {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 35px;
-      height: 45px;
-      background: #4a2306;
-      border-top-left-radius: 17px;
-      border-top-right-radius: 17px;
-    }
-
-    .barn-window {
-      position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 18px;
-      height: 18px;
-      background: #f1c40f;
-      border-radius: 50%;
-      border: 3px solid #4a2306;
-    }
-
+    /* Fence Running Across in Front */
     .fence {
       position: absolute;
-      top: 10px;
+      top: 12px;
       left: 0;
       width: 100%;
       height: 30px;
-      z-index: 2; /* Sits in front of the barn */
+      z-index: 2;
       background: repeating-linear-gradient(
         90deg,
         transparent,
@@ -303,12 +293,43 @@
     <svg viewBox="0 0 30 20"><path d="M 0,10 Q 7,0 15,10 Q 23,0 30,10" stroke="#333" stroke-width="3" fill="none"/></svg>
   </div>
 
-  <!-- Background Scenery (Detailed Barn behind the Fence) -->
+  <!-- Background Scenery -->
   <div class="scenery">
-    <div class="barn">
-      <div class="barn-roof"></div>
-      <div class="barn-window"></div>
-      <div class="barn-door"></div>
+    <div class="barn-container">
+      <svg viewBox="0 0 240 160" width="100%" height="100%">
+        <!-- Right Extension Roof -->
+        <polygon points="160,75 200,45 240,75" fill="#8b0000" />
+        <!-- Right Extension Body -->
+        <rect x="160" y="75" width="80" height="85" fill="#b22222" />
+        <!-- Main Roof -->
+        <polygon points="30,55 120,5 210,55" fill="#8b0000" />
+        <!-- Main Body -->
+        <rect x="30" y="55" width="160" height="105" fill="#b22222" />
+        <!-- Loft Vent -->
+        <rect x="110" y="25" width="20" height="22" fill="#fff" rx="2" />
+        <line x1="113" y1="29" x2="127" y2="29" stroke="#b22222" stroke-width="2"/>
+        <line x1="113" y1="33" x2="127" y2="33" stroke="#b22222" stroke-width="2"/>
+        <line x1="113" y1="37" x2="127" y2="37" stroke="#b22222" stroke-width="2"/>
+        <line x1="113" y1="41" x2="127" y2="41" stroke="#b22222" stroke-width="2"/>
+        <!-- Left Windows -->
+        <rect x="52" y="72" width="14" height="16" fill="#fff" stroke="#8b0000" stroke-width="2" />
+        <rect x="52" y="105" width="14" height="16" fill="#fff" stroke="#8b0000" stroke-width="2" />
+        <!-- Right Windows -->
+        <rect x="154" y="72" width="14" height="16" fill="#fff" stroke="#8b0000" stroke-width="2" />
+        <rect x="154" y="105" width="14" height="16" fill="#fff" stroke="#8b0000" stroke-width="2" />
+        <!-- Extension Window -->
+        <rect x="190" y="95" width="16" height="16" fill="#fff" stroke="#8b0000" stroke-width="2" />
+        <line x1="198" y1="95" x2="198" y2="111" stroke="#8b0000" stroke-width="2"/>
+        <line x1="190" y1="103" x2="206" y2="103" stroke="#8b0000" stroke-width="2"/>
+        <!-- Hay Interior Shadow & Hay -->
+        <rect x="100" y="95" width="40" height="65" fill="#2a0808" />
+        <path d="M 100,140 Q 115,130 140,145 L 140,160 L 100,160 Z" fill="#d4ac0d" />
+        <!-- Large White Double Doors with Cross-Bracing -->
+        <rect x="100" y="95" width="40" height="65" fill="none" stroke="#fff" stroke-width="4" />
+        <line x1="120" y1="95" x2="120" y2="160" stroke="#fff" stroke-width="3" />
+        <line x1="100" y1="95" x2="120" y2="135" stroke="#fff" stroke-width="3" />
+        <line x1="140" y1="95" x2="120" y2="135" stroke="#fff" stroke-width="3" />
+      </svg>
     </div>
     <div class="fence"></div>
   </div>
@@ -319,8 +340,12 @@
     <div>Level: <span id="level-display">1</span></div>
   </div>
 
-  <!-- Clean Splash Screen Overlay -->
+  <!-- Splash Screen / Game Over Modal -->
   <div id="modal-screen" class="modal-overlay">
+    <div class="modal-content">
+      <h1 id="modal-title"></h1>
+      <p id="modal-score-display" style="display: none;"></p>
+    </div>
     <button class="btn" onclick="startGame()">Play Game</button>
   </div>
 
@@ -337,6 +362,8 @@
     const missedEl = document.getElementById('missed');
     const levelDisplayEl = document.getElementById('level-display');
     const modalScreen = document.getElementById('modal-screen');
+    const modalTitle = document.getElementById('modal-title');
+    const modalScoreDisplay = document.getElementById('modal-score-display');
     const playBtn = modalScreen.querySelector('.btn');
 
     const sheepSvg = `
@@ -391,6 +418,8 @@
       isPlaying = false;
       clearInterval(gameInterval);
 
+      modalTitle.textContent = `Level ${nextLevel}`;
+      modalScoreDisplay.style.display = 'none';
       playBtn.textContent = `Start Level ${nextLevel}`;
       modalScreen.style.display = 'block';
     }
@@ -468,6 +497,9 @@
       isPlaying = false;
       clearInterval(gameInterval);
 
+      modalTitle.textContent = 'Game Over';
+      modalScoreDisplay.textContent = `Final Score: ${score}`;
+      modalScoreDisplay.style.display = 'block';
       playBtn.textContent = 'Play Again';
       modalScreen.style.display = 'block';
     }
