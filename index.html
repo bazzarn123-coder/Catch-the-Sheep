@@ -54,43 +54,30 @@
       height: 100%;
       background: url('sheep.jpg') no-repeat center center;
       background-size: cover;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
       z-index: 20;
-      padding: 20px;
-      text-align: center;
     }
 
-    .modal-card {
-      background: rgba(0, 0, 0, 0.45); /* Subtle dark backdrop to make text readable */
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
-      padding: 30px;
-      border-radius: 20px;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    }
-
+    /* Button positioned under the sheep feet area */
     .btn {
-      padding: 14px 35px;
-      font-size: 20px;
+      position: absolute;
+      bottom: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 16px 45px;
+      font-size: 22px;
       font-weight: bold;
       color: white;
       background: #ff5722;
       border: none;
-      border-radius: 30px;
+      border-radius: 35px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
       transition: transform 0.1s, background 0.2s;
-      margin-top: 10px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .btn:active {
-      transform: scale(0.95);
+      transform: translateX(-50%) scale(0.95);
     }
 
     /* Background Sky Animations */
@@ -237,14 +224,9 @@
     <div>Level: <span id="level-display">1</span></div>
   </div>
 
-  <!-- Clean Splash Screen / Game Over Modal -->
+  <!-- Clean Splash Screen Overlay (No Card, Just Button) -->
   <div id="modal-screen" class="modal-overlay">
-    <div class="modal-card">
-      <h1 id="modal-title" style="display: none;"></h1>
-      <ul id="modal-rules" style="display: none;"></ul>
-      <p id="modal-subtext" style="font-size: 20px; margin-bottom: 20px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.6);">Ready to catch some sheep?</p>
-      <button class="btn" onclick="startGame()">Play Game</button>
-    </div>
+    <button class="btn" onclick="startGame()">Play Game</button>
   </div>
 
   <script>
@@ -260,9 +242,7 @@
     const missedEl = document.getElementById('missed');
     const levelDisplayEl = document.getElementById('level-display');
     const modalScreen = document.getElementById('modal-screen');
-    const modalTitle = document.getElementById('modal-title');
-    const modalRules = document.getElementById('modal-rules');
-    const modalSubtext = document.getElementById('modal-subtext');
+    const playBtn = modalScreen.querySelector('.btn');
 
     const sheepSvg = `
       <svg viewBox="0 0 60 45" width="100%" height="100%">
@@ -286,13 +266,13 @@
     `;
 
     function startGame() {
-      if (modalSubtext.textContent.includes('Game Over')) {
-        score = 0;
-        missed = 0;
-        level = 1;
-        spawnRate = 800;
-      } else if (level > 1) {
-        spawnRate = Math.max(150, 800 - (level - 1) * 75);
+      if (playBtn.textContent === 'Play Again' || playBtn.textContent.includes('Level')) {
+        if (playBtn.textContent === 'Play Again') {
+          score = 0;
+          missed = 0;
+          level = 1;
+          spawnRate = 800;
+        }
       } else {
         score = 0;
         missed = 0;
@@ -316,12 +296,8 @@
       isPlaying = false;
       clearInterval(gameInterval);
 
-      modalSubtext.textContent = `Level ${nextLevel} Start! You reached ${score} points. Get ready!`;
-      
-      const btn = modalScreen.querySelector('.btn');
-      btn.textContent = `Start Level ${nextLevel}`;
-
-      modalScreen.style.display = 'flex';
+      playBtn.textContent = `Start Level ${nextLevel}`;
+      modalScreen.style.display = 'block';
     }
 
     function spawnSheep() {
@@ -397,12 +373,8 @@
       isPlaying = false;
       clearInterval(gameInterval);
 
-      modalSubtext.textContent = `Game Over! You scored ${score} points and reached Level ${level}.`;
-      
-      const btn = modalScreen.querySelector('.btn');
-      btn.textContent = 'Play Again';
-
-      modalScreen.style.display = 'flex';
+      playBtn.textContent = 'Play Again';
+      modalScreen.style.display = 'block';
     }
   </script>
 </body>
