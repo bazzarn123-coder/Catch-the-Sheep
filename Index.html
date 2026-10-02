@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Sheep Tap Frenzy!</title>
+  
+  <!-- Favicon for Browser Address Bar / Tab -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 45'><rect x='15' y='30' width='4' height='10' fill='%23222'/><rect x='43' y='30' width='4' height='10' fill='%23222'/><circle cx='20' cy='20' r='12' fill='%23fff'/><circle cx='30' cy='16' r='14' fill='%23fff'/><circle cx='40' cy='20' r='12' fill='%23fff'/><circle cx='30' cy='24' r='12' fill='%23fff'/><ellipse cx='12' cy='18' rx='7' ry='9' fill='%23333'/><circle cx='10' cy='16' r='1.5' fill='%23fff'/></svg>">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 55%, #5c9335 55%, #477428 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      touch-action: manipulation;
+      position: relative;
+    }
+
+    /* Scoreboard UI */
+    #ui {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      z-index: 10;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Overlay Screen (Splash Screen & Game Over) with sheep.jpg */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('sheep.jpg') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      z-index: 20;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal-card {
+      background: rgba(0, 0, 0, 0.65); /* Darker frosted background for readability over artwork */
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-card h1 {
+      font-size: 36px;
+      margin-bottom: 15px;
+      color: #ffeb3b;
+    }
+
+    .rules-list {
+      text-align: left;
+      margin: 20px 0;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .rules-list li {
+      margin-bottom: 10px;
+      list-style-type: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 14px 35px;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      background: #ff5722;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.1s, background 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Background Sky Animations */
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 50px;
+      pointer-events: none;
+      animation: floatCloud linear infinite;
+    }
+
+    .cloud::before, .cloud::after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+    }
+
+    .cloud::before {
+      width: 50px;
+      height: 50px;
+      top: -20px;
+      left: 15px;
+    }
+
+    .cloud::after {
+      width: 35px;
+      height: 35px;
+      top: -12px;
+      right: 15px;
+    }
+
+    @keyframes floatCloud {
+      from { left: -150px; }
+      to { left: 100vw; }
+    }
+
+    .bird {
+      position: absolute;
+      width: 25px;
+      height: 15px;
+      pointer-events: none;
+      animation: flyBird linear infinite;
+    }
+
+    @keyframes flyBird {
+      from { left: -40px; }
+      to { left: 100vw; }
+    }
+
+    .bird svg {
+      animation: flap 0.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes flap {
+      0% { transform: scaleY(1); }
+      100% { transform: scaleY(0.4); }
+    }
+
+    /* Sheep Styles */
+    .sheep {
+      position: absolute;
+      width: 45px;
+      height: 35px;
+      cursor: pointer;
+      animation: fadeInOut 2.5s linear forwards;
+      pointer-events: auto;
+      z-index: 5;
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+      15% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      75% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+    }
+
+    /* SVG Elements */
+    .sheep-body {
+      fill: #ffffff;
+      filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.2));
+    }
+
+    .sheep-head {
+      fill: #333333;
+    }
+
+    .sheep-eye {
+      fill: #ffffff;
+    }
+
+    /* Pop Effect on Tap */
+    .pop {
+      position: absolute;
+      pointer-events: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      animation: popUp 0.4s ease-out forwards;
+      z-index: 15;
+    }
+
+    @keyframes popUp {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -80%) scale(1.5);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sky Decorations -->
+  <div class="cloud" style="width: 100px; height: 35px; top: 8%; animation-duration: 35s; animation-delay: 0s;"></div>
+  <div class="cloud" style="width: 140px; height: 45px; top: 18%; animation-duration: 48s; animation-delay: -15s;"></div>
+  <div class="cloud" style="width: 90px; height: 30px; top: 30%; animation-duration: 28s; animation-delay: -8s;"></div>
+
+  <div class="bird" style="top: 12%; animation-duration: 12s; animation-delay: 0s;">
+    <svg viewBox="0 0 30 20"><path d="M 0,10 Q 7,0 15,10 Q 23,0 30,10" stroke="#333" stroke-width="3" fill="none"/></svg>
+  </div>
+  <div class="bird" style="top: 22%; animation-duration: 16s; animation-delay: -5s;">
+    <svg viewBox="0 0 30 20"><path d="M 0,10 Q 7,0 15,10 Q 23,0 30,10" stroke="#333" stroke-width="3" fill="none"/></svg>
+  </div>
+
+  <div id="ui">
+    <div>Score: <span id="score">0</span></div>
+    <div>Missed: <span id="missed">0</span>/10</div>
+    <div>Level: <span id="level-display">1</span></div>
+  </div>
+
+  <!-- Splash Screen / Game Over Modal -->
+  <div id="modal-screen" class="modal-overlay">
+    <div class="modal-card">
+      <h1 id="modal-title">Sheep Frenzy!</h1>
+      <ul id="modal-rules" class="rules-list">
+        <li>⚡ <b>Tap the sheep</b> as fast as you can to clear them from the field.</li>
+        <li>⏳ Each sheep only stays on screen for a few seconds before fading.</li>
+        <li>🔥 Reach 500 points to advance through levels and speed up!</li>
+        <li>❌ Miss <b>10 sheep</b> and it's Game Over!</li>
+      </ul>
+      <p id="modal-subtext" style="display: none; font-size: 20px; margin-bottom: 20px;"></p>
+      <button class="btn" onclick="startGame()">Play Game</button>
+    </div>
+  </div>
+
+  <script>
+    let score = 0;
+    let missed = 0;
+    const maxMissed = 10;
+    let level = 1;
+    let gameInterval;
+    let isPlaying = false;
+    let spawnRate = 800;
+
+    const scoreEl = document.getElementById('score');
+    const missedEl = document.getElementById('missed');
+    const levelDisplayEl = document.getElementById('level-display');
+    const modalScreen = document.getElementById('modal-screen');
+    const modalTitle = document.getElementById('modal-title');
+    const modalRules = document.getElementById('modal-rules');
+    const modalSubtext = document.getElementById('modal-subtext');
+
+    const sheepSvg = `
+      <svg viewBox="0 0 60 45" width="100%" height="100%">
+        <!-- Legs -->
+        <rect x="15" y="30" width="4" height="10" rx="2" fill="#222" />
+        <rect x="23" y="30" width="4" height="10" rx="2" fill="#222" />
+        <rect x="35" y="30" width="4" height="10" rx="2" fill="#222" />
+        <rect x="43" y="30" width="4" height="10" rx="2" fill="#222" />
+        <!-- Fluffy Body -->
+        <circle cx="20" cy="20" r="12" class="sheep-body" />
+        <circle cx="30" cy="16" r="14" class="sheep-body" />
+        <circle cx="40" cy="20" r="12" class="sheep-body" />
+        <circle cx="30" cy="24" r="12" class="sheep-body" />
+        <!-- Head -->
+        <ellipse cx="12" cy="18" rx="7" ry="9" class="sheep-head" />
+        <!-- Ears -->
+        <ellipse cx="16" cy="12" rx="4" ry="2" class="sheep-head" transform="rotate(-20 16 12)" />
+        <!-- Eye -->
+        <circle cx="10" cy="16" r="1.5" class="sheep-eye" />
+      </svg>
+    `;
+
+    function startGame() {
+      if (modalTitle.textContent === 'Game Over!') {
+        score = 0;
+        missed = 0;
+        level = 1;
+        spawnRate = 800;
+      } else if (level > 1) {
+        spawnRate = Math.max(150, 800 - (level - 1) * 75);
+      } else {
+        score = 0;
+        missed = 0;
+        level = 1;
+        spawnRate = 800;
+      }
+
+      isPlaying = true;
+      scoreEl.textContent = score;
+      missedEl.textContent = missed;
+      levelDisplayEl.textContent = level;
+
+      document.querySelectorAll('.sheep').forEach(s => s.remove());
+      modalScreen.style.display = 'none';
+
+      clearInterval(gameInterval);
+      gameInterval = setInterval(spawnSheep, spawnRate);
+    }
+
+    function showLevelUpModal(nextLevel) {
+      isPlaying = false;
+      clearInterval(gameInterval);
+
+      modalTitle.textContent = `Level ${nextLevel} Start!`;
+      modalRules.style.display = 'none';
+      modalSubtext.style.display = 'block';
+      modalSubtext.textContent = `Awesome! You reached ${score} points. Get ready for faster sheep!`;
+      
+      const btn = modalScreen.querySelector('.btn');
+      btn.textContent = `Start Level ${nextLevel}`;
+
+      modalScreen.style.display = 'flex';
+    }
+
+    function spawnSheep() {
+      if (!isPlaying) return;
+
+      const sheep = document.createElement('div');
+      sheep.className = 'sheep';
+      sheep.innerHTML = sheepSvg;
+
+      const paddingX = 40;
+      const groundTop = window.innerHeight * 0.58;
+      const groundBottom = window.innerHeight - 50;
+
+      const x = Math.random() * (window.innerWidth - paddingX * 2) + paddingX;
+      const y = Math.random() * (groundBottom - groundTop) + groundTop;
+
+      sheep.style.left = `${x}px`;
+      sheep.style.top = `${y}px`;
+
+      if (Math.random() > 0.5) {
+        sheep.style.transform = 'scaleX(-1)';
+      }
+
+      const tapHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isPlaying) return;
+
+        score += 10;
+        scoreEl.textContent = score;
+
+        createPopEffect(x, y);
+        sheep.remove();
+
+        if (score > 0 && score % 500 === 0) {
+          level++;
+          showLevelUpModal(level);
+          return;
+        }
+      };
+
+      sheep.addEventListener('touchstart', tapHandler, { passive: false });
+      sheep.addEventListener('mousedown', tapHandler);
+
+      sheep.addEventListener('animationend', () => {
+        if (document.body.contains(sheep)) {
+          sheep.remove();
+          missed++;
+          missedEl.textContent = missed;
+
+          if (missed >= maxMissed) {
+            endGame();
+          }
+        }
+      });
+
+      document.body.appendChild(sheep);
+    }
+
+    function createPopEffect(x, y) {
+      const pop = document.createElement('div');
+      pop.className = 'pop';
+      pop.textContent = '+10';
+      pop.style.left = `${x}px`;
+      pop.style.top = `${y}px`;
+      document.body.appendChild(pop);
+
+      setTimeout(() => pop.remove(), 400);
+    }
+
+    function endGame() {
+      isPlaying = false;
+      clearInterval(gameInterval);
+
+      modalTitle.textContent = 'Game Over!';
+      modalRules.style.display = 'none';
+      modalSubtext.style.display = 'block';
+      modalSubtext.textContent = `You scored ${score} points and reached Level ${level}!`;
+      
+      const btn = modalScreen.querySelector('.btn');
+      btn.textContent = 'Play Again';
+
+      modalScreen.style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
