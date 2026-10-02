@@ -80,7 +80,7 @@
       transform: translateX(-50%) scale(0.95);
     }
 
-    /* Background Elements: Barn and Fence */
+    /* Background Scenery: Detailed Barn & Fence */
     .scenery {
       position: absolute;
       top: 55%;
@@ -93,32 +93,56 @@
 
     .barn {
       position: absolute;
-      left: 75%;
-      bottom: 60%;
-      width: 90px;
-      height: 70px;
+      left: 68%;
+      bottom: 58%;
+      width: 140px;
+      height: 95px;
       background: #b22222;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
+      border-radius: 2px;
+      z-index: 1;
     }
 
-    .barn::before {
-      content: '';
+    .barn-roof {
       position: absolute;
-      top: -30px;
-      left: -10px;
-      width: 110px;
-      height: 35px;
+      top: -45px;
+      left: -12px;
+      width: 164px;
+      height: 45px;
       background: #8b0000;
       clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
     }
 
-    .fence {
+    .barn-door {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 35px;
+      height: 45px;
+      background: #4a2306;
+      border-top-left-radius: 17px;
+      border-top-right-radius: 17px;
+    }
+
+    .barn-window {
       position: absolute;
       top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      background: #f1c40f;
+      border-radius: 50%;
+      border: 3px solid #4a2306;
+    }
+
+    .fence {
+      position: absolute;
+      top: 10px;
       left: 0;
       width: 100%;
-      height: 25px;
+      height: 30px;
+      z-index: 2; /* Sits in front of the barn */
       background: repeating-linear-gradient(
         90deg,
         transparent,
@@ -134,9 +158,9 @@
       top: 6px;
       left: 0;
       width: 100%;
-      height: 4px;
+      height: 5px;
       background: #a0522d;
-      box-shadow: 0 8px 0 #a0522d;
+      box-shadow: 0 10px 0 #a0522d;
     }
 
     /* Background Sky Animations */
@@ -279,9 +303,13 @@
     <svg viewBox="0 0 30 20"><path d="M 0,10 Q 7,0 15,10 Q 23,0 30,10" stroke="#333" stroke-width="3" fill="none"/></svg>
   </div>
 
-  <!-- Background Scenery (Barn and Fence) -->
+  <!-- Background Scenery (Detailed Barn behind the Fence) -->
   <div class="scenery">
-    <div class="barn"></div>
+    <div class="barn">
+      <div class="barn-roof"></div>
+      <div class="barn-window"></div>
+      <div class="barn-door"></div>
+    </div>
     <div class="fence"></div>
   </div>
 
