@@ -45,7 +45,7 @@
       backdrop-filter: blur(4px);
     }
 
-    /* Overlay Screen (Splash Screen & Game Over) with sheep.jpg */
+    /* Overlay Screen with sheep.jpg background */
     .modal-overlay {
       position: absolute;
       top: 0;
@@ -65,35 +65,14 @@
     }
 
     .modal-card {
-      background: rgba(0, 0, 0, 0.65); /* Darker frosted background for readability over artwork */
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.45); /* Subtle dark backdrop to make text readable */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
       padding: 30px;
       border-radius: 20px;
       max-width: 400px;
       width: 90%;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-card h1 {
-      font-size: 36px;
-      margin-bottom: 15px;
-      color: #ffeb3b;
-    }
-
-    .rules-list {
-      text-align: left;
-      margin: 20px 0;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    .rules-list li {
-      margin-bottom: 10px;
-      list-style-type: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
     }
 
     .btn {
@@ -258,17 +237,12 @@
     <div>Level: <span id="level-display">1</span></div>
   </div>
 
-  <!-- Splash Screen / Game Over Modal -->
+  <!-- Clean Splash Screen / Game Over Modal -->
   <div id="modal-screen" class="modal-overlay">
     <div class="modal-card">
-      <h1 id="modal-title">Sheep Frenzy!</h1>
-      <ul id="modal-rules" class="rules-list">
-        <li>⚡ <b>Tap the sheep</b> as fast as you can to clear them from the field.</li>
-        <li>⏳ Each sheep only stays on screen for a few seconds before fading.</li>
-        <li>🔥 Reach 500 points to advance through levels and speed up!</li>
-        <li>❌ Miss <b>10 sheep</b> and it's Game Over!</li>
-      </ul>
-      <p id="modal-subtext" style="display: none; font-size: 20px; margin-bottom: 20px;"></p>
+      <h1 id="modal-title" style="display: none;"></h1>
+      <ul id="modal-rules" style="display: none;"></ul>
+      <p id="modal-subtext" style="font-size: 20px; margin-bottom: 20px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.6);">Ready to catch some sheep?</p>
       <button class="btn" onclick="startGame()">Play Game</button>
     </div>
   </div>
@@ -312,7 +286,7 @@
     `;
 
     function startGame() {
-      if (modalTitle.textContent === 'Game Over!') {
+      if (modalSubtext.textContent.includes('Game Over')) {
         score = 0;
         missed = 0;
         level = 1;
@@ -342,10 +316,7 @@
       isPlaying = false;
       clearInterval(gameInterval);
 
-      modalTitle.textContent = `Level ${nextLevel} Start!`;
-      modalRules.style.display = 'none';
-      modalSubtext.style.display = 'block';
-      modalSubtext.textContent = `Awesome! You reached ${score} points. Get ready for faster sheep!`;
+      modalSubtext.textContent = `Level ${nextLevel} Start! You reached ${score} points. Get ready!`;
       
       const btn = modalScreen.querySelector('.btn');
       btn.textContent = `Start Level ${nextLevel}`;
@@ -426,10 +397,7 @@
       isPlaying = false;
       clearInterval(gameInterval);
 
-      modalTitle.textContent = 'Game Over!';
-      modalRules.style.display = 'none';
-      modalSubtext.style.display = 'block';
-      modalSubtext.textContent = `You scored ${score} points and reached Level ${level}!`;
+      modalSubtext.textContent = `Game Over! You scored ${score} points and reached Level ${level}.`;
       
       const btn = modalScreen.querySelector('.btn');
       btn.textContent = 'Play Again';
